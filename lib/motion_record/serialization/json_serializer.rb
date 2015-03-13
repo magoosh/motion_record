@@ -1,5 +1,5 @@
 module MotionRecord
-  module AttributeSerializers
+  module Serialization
     class JSONParserError < StandardError; end
 
     class JSONSerializer < BaseSerializer

@@ -1,6 +1,6 @@
 # This serializer converts the object back and forth as-is
 module MotionRecord
-  module AttributeSerializers
+  module Serialization
     class DefaultSerializer < BaseSerializer
       def serialize(value)
         value

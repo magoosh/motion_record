@@ -1,5 +1,5 @@
 module MotionRecord
-  module AttributeSerializers
+  module Serialization
     class TimeSerializer < BaseSerializer
 
       # Pattern stolen from Ruby Time's xmlschema method

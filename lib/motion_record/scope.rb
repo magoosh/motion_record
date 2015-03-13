@@ -43,7 +43,7 @@ module MotionRecord
     end
 
     def find_all
-      connection.select(self).map { |row| @klass.from_table_row(row) }
+      connection.select(self).map { |row| @klass.from_table_params(row) }
     end
 
     def pluck(attribute)

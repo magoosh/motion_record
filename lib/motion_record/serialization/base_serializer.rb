@@ -1,5 +1,5 @@
 module MotionRecord
-  module AttributeSerializers
+  module Serialization
     class BaseSerializer
       # column - a Schema::ColumnDefinition object
       def initialize(column)

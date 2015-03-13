@@ -13,14 +13,14 @@ Motion::Project::App.setup do |app|
 
   dirname = File.dirname(__FILE__)
 
-  serializer_files = Dir.glob(File.join(dirname, 'motion_record/attribute_serializers/*.rb'))
-  connection_files = Dir.glob(File.join(dirname, 'motion_record/connection_adapters/*.rb'))
-  schema_files     = Dir.glob(File.join(dirname, 'motion_record/schema/*.rb'))
-  base_files       = Dir.glob(File.join(dirname, 'motion_record/*.rb'))
+  serial_files = Dir.glob(File.join(dirname, 'motion_record/serialization/*.rb'))
+  conn_files   = Dir.glob(File.join(dirname, 'motion_record/connection_adapters/*.rb'))
+  schema_files = Dir.glob(File.join(dirname, 'motion_record/schema/*.rb'))
+  base_files   = Dir.glob(File.join(dirname, 'motion_record/*.rb'))
 
   # RubyMotion for Android can't infer file dependencies so we must explicitly
   # declare their compilation order
-  (base_files + schema_files + connection_files + serializer_files).reverse.each do |file|
+  (base_files + schema_files + conn_files + serial_files).reverse.each do |file|
     app.files.unshift(file)
   end
 

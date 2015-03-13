@@ -16,7 +16,7 @@ gem "motion_record"
 ```
 
 On iOS, MotionRecord uses [motion-sqlite3](https://github.com/mattgreen/motion-sqlite3)
-as a wrapper for connecting to SQLite. Add these lines to your Gemfile too:
+as a wrapper for connecting to SQLite, so add these lines to your Gemfile too:
 
 ```ruby
 gem "motion-sqlite3"
@@ -59,8 +59,6 @@ def application(application, didFinishLaunchingWithOptions:launchOptions)
   # ...
 end
 ```
-
-* TODO: Add timestamp columns?
 
 #### Schema Configuration
 
@@ -117,6 +115,8 @@ message.persisted?
 # => false
 ```
 
+* TODO: Better default inflection of class names to table names
+
 MotionRecord::Scope
 -------------------
 
@@ -155,7 +155,7 @@ Message.where(subject: "How do you like the app?").maximum(:satisfaction)
 
 * TODO: Handle datatype conversion in `where` and `update_all`
 
-MotionRecord::AttributeSerializers
+MotionRecord::Serialization
 ----------------------------------
 
 SQLite has a very limited set of datatypes (TEXT, INTEGER, and REAL), but you
@@ -206,11 +206,11 @@ Survey.first
 
 #### Custom Serializers
 
-To write a custom serializer, subclass MotionRecord::AttributeSerializers::BaseSerializer
+To write a custom serializer, extend MotionRecord::Serialization::BaseSerializer
 and provide your class to `serialize` instead of a symbol.
 
 ```ruby
-class MoneySerializer < MotionRecord::AttributeSerializers::BaseSerializer
+class MoneySerializer < MotionRecord::Serialization::BaseSerializer
   def serialize(value)
     raise "Wrong column type!" unless @column.type == :integer
     value.cents

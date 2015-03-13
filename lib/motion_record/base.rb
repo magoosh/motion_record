@@ -12,6 +12,12 @@ module MotionRecord
       end
     end
 
+    def to_attribute_hash
+      self.class.attribute_names.each_with_object({}) do |name, hash|
+        hash[name] = self.instance_variable_get "@#{name}"
+      end
+    end
+
     def connection
       self.class.connection
     end

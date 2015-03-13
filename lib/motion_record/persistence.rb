@@ -2,12 +2,7 @@ module MotionRecord
   module Persistence
 
     def save!
-      if persisted?
-        self.class.where(primary_key_condition).update_all(self.to_db_params)
-      else
-        connection.insert self.class.table_name, to_db_params
-      end
-      mark_persisted!
+      persist!
     end
 
     def delete!
@@ -15,16 +10,6 @@ module MotionRecord
         self.class.where(primary_key_condition).delete_all
       else
         raise "Can't delete unpersisted records"
-      end
-    end
-
-    def to_db_params
-      self.class.table_columns.values.each_with_object({}) do |column, params|
-        unless column.name == self.class.primary_key
-          value = self.instance_variable_get "@#{column.name}"
-          serializer = self.class.serializers[column.name].new(column)
-          params[column.name] = serializer.serialize(value)
-        end
       end
     end
 
@@ -44,44 +29,30 @@ module MotionRecord
       @persisted = false
     end
 
+    protected
+
+    def persist!
+      # HACK: Must ensure that attribute definitions are loaded from the table
+      self.class.table_columns
+
+      params = self.to_attribute_hash.reject { |k, _v| k == self.class.primary_key }
+      table_params = self.class.to_table_params(params)
+
+      if persisted?
+        self.class.where(primary_key_condition).update_all(table_params)
+      else
+        connection.insert self.class.table_name, table_params
+      end
+
+      self.mark_persisted!
+    end
+
     module ClassMethods
       include MotionRecord::ScopeHelpers::ClassMethods
+      include MotionRecord::Serialization::ClassMethods
 
       def create!(attributes={})
         self.new(attributes).save!
-      end
-
-      def serialize(attribute_name, serializer)
-        if serializer.is_a?(Symbol)
-          self.serializers[attribute_name] = case serializer
-          when :time
-            AttributeSerializers::TimeSerializer
-          when :boolean
-            AttributeSerializers::BooleanSerializer
-          when :json
-            AttributeSerializers::JSONSerializer
-          else
-            raise "Unknown serializer #{serializer.inspect}"
-          end
-        else
-          self.serializers[attribute_name] = serializer_class
-        end
-      end
-
-      def serializers
-        @serializers ||= Hash.new(AttributeSerializers::DefaultSerializer)
-      end
-
-      # Build a new object from the Hash result of a SQL query
-      def from_table_row(hash)
-        deserialized_hash = {}
-        hash.each do |column_name, value|
-          serializer = self.serializers[column_name].new(self.table_columns[column_name])
-          deserialized_hash[column_name] = serializer.deserialize(value)
-        end
-        record = self.new(deserialized_hash)
-        record.mark_persisted!
-        record
       end
 
       # Sybmol name of the primary key column

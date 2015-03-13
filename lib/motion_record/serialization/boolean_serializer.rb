@@ -1,5 +1,5 @@
 module MotionRecord
-  module AttributeSerializers
+  module Serialization
     class BooleanSerializer < BaseSerializer
 
       def serialize(value)
