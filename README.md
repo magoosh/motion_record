@@ -6,7 +6,7 @@ MotionRecord
 Everything you need to start using SQLite as the datastore for your RubyMotion
 app.
 
-:turtle: Android support should be coming soon
+:turtle: Android support should be [coming soon](https://github.com/magoosh/motion_record/issues/3)
 
 [![Gem Version](https://badge.fury.io/rb/motion_record.svg)](http://badge.fury.io/rb/motion_record) [![Code Climate](https://codeclimate.com/github/magoosh/motion_record/badges/gpa.svg)](https://codeclimate.com/github/magoosh/motion_record) [![Test Coverage](https://codeclimate.com/github/magoosh/motion_record/badges/coverage.svg)](https://codeclimate.com/github/magoosh/motion_record)
 
@@ -35,7 +35,38 @@ And then execute:
 $ bundle
 ```
 
-* TODO: Android???
+MotionRecord::Base
+------------------
+
+MotionRecord::Base provides a superclass for defining objects which are stored
+in the database.
+
+```ruby
+class Message < MotionRecord::Base
+  # That's all!
+end
+```
+
+Attribute methods are inferred from the associated SQLite table definition.
+
+```ruby
+message = Message.new(subject: "Welcome!", body: "If you have any questions...")
+# => #<Message: @id=nil @subject="Welcome!" @body="If you have any..." ...>
+message.satisfaction
+# => 0.0
+```
+
+Manage persistence with `save!`, `delete!`, and `persisted?`
+
+```ruby
+message = Message.new(subject: "Welcome!", body: "If you have any questions...")
+message.save!
+message.id
+# => 1
+message.delete!
+message.persisted?
+# => false
+```
 
 MotionRecord::Schema
 --------------------
@@ -82,41 +113,6 @@ which will be cleared every time the app process is killed.
 MotionRecord::Schema.up!(file: :memory) # ...
 ```
 
-MotionRecord::Base
-------------------
-
-MotionRecord::Base provides a superclass for defining objects which are stored
-in the database.
-
-```ruby
-class Message < MotionRecord::Base
-  # That's all!
-end
-```
-
-Attribute methods are inferred from the associated SQLite table definition.
-
-```ruby
-message = Message.new(subject: "Welcome!", body: "If you have any questions...")
-# => #<Message: @id=nil @subject="Welcome!" @body="If you have any..." ...>
-message.satisfaction
-# => 0.0
-```
-
-Manage persistence with `save!`, `delete!`, and `persisted?`
-
-```ruby
-message = Message.new(subject: "Welcome!", body: "If you have any questions...")
-message.save!
-message.id
-# => 1
-message.delete!
-message.persisted?
-# => false
-```
-
-* TODO: Better default inflection of class names to table names
-
 MotionRecord::Scope
 -------------------
 
@@ -141,8 +137,6 @@ Message.where(read_at: nil).find_all
 Message.where(read_at: nil).update_all(read_at: Time.now.to_i)
 ```
 
-* TODO: Return "rows modified" count for update_all and delete_all
-
 Run calculations on scopes with `count`, `sum`, `maximum`, `minimum`, and
 `average`.
 
@@ -152,9 +146,6 @@ Message.where(subject: "Welcome!").count
 Message.where(subject: "How do you like the app?").maximum(:satisfaction)
 # => 10.0
 ```
-
-* TODO: Predicates for comparisons other than `=`
-* TODO: Handle datatype conversion in `where` and `update_all`
 
 MotionRecord::Serialization
 ----------------------------------
@@ -203,8 +194,6 @@ Survey.first
 # => #<Survey: @id=1 @response={"nps"=>10, "what_can_we_improve"=>"Nothing :)"}>
 ```
 
-* TODO: Make JSON serializer cross-platform
-
 #### Custom Serializers
 
 To write a custom serializer, extend MotionRecord::Serialization::BaseSerializer
@@ -231,7 +220,7 @@ end
 MotionRecord::Association
 -------------------------
 
-* TODO: has_many and belongs_to
+[TODO](https://github.com/magoosh/motion_record/issues/7)
 
 
 Contributing
