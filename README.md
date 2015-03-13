@@ -3,10 +3,10 @@ MotionRecord
 
 *Miniature ActiveRecord for RubyMotion*
 
-Everything you need needed to start using SQLite as the datastore for your
-RubyMotion iOS app.
+Everything you need to start using SQLite as the datastore for your RubyMotion
+app.
 
-Android support should be coming soon :turtle:
+:turtle: Android support should be coming soon
 
 Installation
 ------------
@@ -18,7 +18,7 @@ gem "motion_record"
 ```
 
 On iOS, MotionRecord uses [motion-sqlite3](https://github.com/mattgreen/motion-sqlite3)
-as a wrapper for connecting to SQLite, so add these lines to your Gemfile too:
+as a wrapper for connecting to SQLite, so add these too:
 
 ```ruby
 gem "motion-sqlite3"
@@ -44,7 +44,7 @@ Define and run all pending SQLite migrations with the `up!` DSL.
 def application(application, didFinishLaunchingWithOptions:launchOptions)
   MotionRecord::Schema.up! do
     migration 1, "Create messages table" do
-      create_table "messages" do |t|
+      create_table :messages do |t|
         t.text    :subject,      null: false
         t.text    :body
         t.integer :read_at
@@ -54,8 +54,8 @@ def application(application, didFinishLaunchingWithOptions:launchOptions)
     end
 
     migration 2, "Index messages table" do
-      add_index "messages", :remote_id, :unique => true
-      add_index "messages", :read_at
+      add_index :messages, :remote_id, :unique => true
+      add_index :messages, [:subject, :read_at]
     end
   end
   # ...
