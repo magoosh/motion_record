@@ -1,34 +1,33 @@
 module MotionRecord
   module Serialization
     module ClassMethods
-      def serialize(attribute_name, serializer_class_or_sym)
-        column = self.table_columns[attribute_name]
-
+      # Register a new attribute serializer
+      #
+      # attribute               - Symbol name of the attribute
+      # serializer_class_or_sym - One of :time, :boolean, :json or a custom
+      #                           subclass of Serialization::BaseSerializer
+      def serialize(attribute, serializer_class_or_sym)
         if serializer_class_or_sym.is_a?(Symbol)
-          self.serializers[attribute_name] = case serializer
+          self.serializer_classes[attribute] = case serializer_class_or_sym
           when :time
-            Serialization::TimeSerializer.new(column)
+            Serialization::TimeSerializer
           when :boolean
-            Serialization::BooleanSerializer.new(column)
+            Serialization::BooleanSerializer
           when :json
-            Serialization::JSONSerializer.new(column)
+            Serialization::JSONSerializer
           else
-            raise "Unknown serializer #{serializer.inspect}"
+            raise "Unknown serializer #{serializer_class_or_sym.inspect}"
           end
         else
-          self.serializers[attribute_name] = serializer_class_or_sym.new(column)
+          self.serializer_classes[attribute] = serializer_class_or_sym
         end
-      end
-
-      def serializers
-        @serializers ||= Hash.new(Serialization::DefaultSerializer.new(nil))
       end
 
       # Build a new object from the Hash result of a SQL query
       def from_table_params(params)
         attributes = {}
         params.each do |name, value|
-          attributes[name.to_sym] = serializers[name.to_sym].deserialize(value)
+          attributes[name.to_sym] = serializer(name.to_sym).deserialize(value)
         end
         record = self.new(attributes)
         record.mark_persisted!
@@ -37,13 +36,32 @@ module MotionRecord
 
       # Serialize a Hash of attributes to their database representation
       def to_table_params(hash)
-        params = {}
-        hash.each do |name, value|
-          unless name == primary_key
-            params[name] = serializers[name].serialize(value)
-          end
+        hash.each_with_object({}) do |attribute_and_value, params|
+          attribute, value = attribute_and_value
+          params[attribute] = serializer(attribute).serialize(value)
         end
-        params
+      end
+
+      protected
+
+      # Internal: Get the serializer object for an attribute
+      #
+      # attribute - Symbol name of the attribute
+      def serializer(attribute)
+        @serializers ||= {}
+        unless @serializers[attribute]
+          @serializers[attribute] = build_serializer(attribute)
+        end
+        @serializers[attribute]
+      end
+
+      # Internal: Registry of serializer classes 
+      def serializer_classes
+        @serializer_classes ||= Hash.new(Serialization::DefaultSerializer)
+      end
+
+      def build_serializer(attribute)
+        serializer_classes[attribute].new(table_columns[attribute])
       end
     end
   end
