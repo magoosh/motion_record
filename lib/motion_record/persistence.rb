@@ -13,10 +13,6 @@ module MotionRecord
       end
     end
 
-    def primary_key_condition
-      {self.class.primary_key => self.instance_variable_get("@#{self.class.primary_key}")}
-    end
-
     def persisted?
       !!@persisted
     end
@@ -45,6 +41,10 @@ module MotionRecord
       end
 
       self.mark_persisted!
+    end
+
+    def primary_key_condition
+      {self.class.primary_key => self.instance_variable_get("@#{self.class.primary_key}")}
     end
 
     module ClassMethods
