@@ -68,18 +68,14 @@ logging (for release) or change the filename, pass configuration options to `up!
 
 ```ruby
 resource_file = File.join(NSBundle.mainBundle.resourcePath, "data.sqlite3")
-MotionRecord::Schema.up!(file: resource_file, debug: false) do
-  #...
-end
+MotionRecord::Schema.up!(file: resource_file, debug: false) # ...
 ```
 
 You can also specify that MotionRecord should use an in-memory SQLite database
 which will be cleared every time the app process is killed.
 
 ```ruby
-MotionRecord::Schema.up!(file: :memory) do
-  #...
-end
+MotionRecord::Schema.up!(file: :memory) # ...
 ```
 
 MotionRecord::Base
@@ -153,6 +149,7 @@ Message.where(subject: "How do you like the app?").maximum(:satisfaction)
 # => 10.0
 ```
 
+* TODO: Predicates for comparisons other than `=`
 * TODO: Handle datatype conversion in `where` and `update_all`
 
 MotionRecord::Serialization
