@@ -64,5 +64,9 @@ module MotionRecord
         serializer_classes[attribute].new(table_columns[attribute])
       end
     end
+
+    def self.included(base)
+      base.extend(ClassMethods)
+    end
   end
 end

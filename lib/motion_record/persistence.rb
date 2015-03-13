@@ -48,9 +48,6 @@ module MotionRecord
     end
 
     module ClassMethods
-      include MotionRecord::ScopeHelpers::ClassMethods
-      include MotionRecord::Serialization::ClassMethods
-
       def create!(attributes={})
         self.new(attributes).save!
       end

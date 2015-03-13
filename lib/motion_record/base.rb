@@ -1,6 +1,8 @@
 module MotionRecord
   class Base
     include Persistence
+    include ScopeHelpers
+    include Serialization
 
     def initialize(attributes={})
       initialize_from_attribute_hash(attributes)

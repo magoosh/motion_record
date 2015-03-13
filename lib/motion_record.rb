@@ -26,9 +26,9 @@ Motion::Project::App.setup do |app|
 
   # Some files don't have the same dependency order and alphabetic order
   {
-    "motion_record/base.rb"        => "motion_record/persistence.rb",
-    "motion_record/persistence.rb" => "motion_record/serialization.rb",
-    "motion_record/persistence.rb" => "motion_record/scope_helpers.rb"
+    "motion_record/base.rb" => "motion_record/persistence.rb",
+    "motion_record/base.rb" => "motion_record/serialization.rb",
+    "motion_record/base.rb" => "motion_record/scope_helpers.rb"
   }.each do |file, dependency|
     app.files_dependencies File.join(dirname, file) => File.join(dirname, dependency)
   end
