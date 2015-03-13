@@ -20,7 +20,7 @@ Motion::Project::App.setup do |app|
 
   # RubyMotion for Android can't infer file dependencies so we must explicitly
   # declare their compilation order
-  (base_files + trait_files + action_files + prep_files).reverse.each do |file|
+  (base_files + schema_files + connection_files + serializer_files).reverse.each do |file|
     app.files.unshift(file)
   end
 
