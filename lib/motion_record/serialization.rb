@@ -23,19 +23,24 @@ module MotionRecord
         end
       end
 
-      # Build a new object from the Hash result of a SQL query
-      def from_table_params(params)
-        attributes = {}
-        params.each do |name, value|
+      # Deserialize a Hash of attributes from their database representation
+      #
+      # params - a Hash of Symbol column names to SQLite values
+      #
+      # Returns a Hash with all values replaced by their deserialized versions
+      def deserialize_table_params(params)
+        params.each_with_object({}) do |name_and_value, attributes|
+          name, value = name_and_value
           attributes[name.to_sym] = serializer(name.to_sym).deserialize(value)
         end
-        record = self.new(attributes)
-        record.mark_persisted!
-        record
       end
 
       # Serialize a Hash of attributes to their database representation
-      def to_table_params(hash)
+      #
+      # params - a Hash of Symbol column names to their attribute values
+      #
+      # Returns a Hash with all values replaced by their serialized versions
+      def serialize_table_params(hash)
         hash.each_with_object({}) do |attribute_and_value, params|
           attribute, value = attribute_and_value
           params[attribute] = serializer(attribute).serialize(value)

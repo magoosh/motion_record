@@ -43,7 +43,11 @@ module MotionRecord
     end
 
     def find_all
-      connection.select(self).map { |row| @klass.from_table_params(row) }
+      connection.select(self).map do |row|
+        record = @klass.new(@klass.deserialize_table_params(row))
+        record.mark_persisted!
+        record
+      end
     end
 
     def pluck(attribute)

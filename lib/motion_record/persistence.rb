@@ -32,7 +32,7 @@ module MotionRecord
       self.class.table_columns
 
       params = self.to_attribute_hash.reject { |k, _v| k == self.class.primary_key }
-      table_params = self.class.to_table_params(params)
+      table_params = self.class.serialize_table_params(params)
 
       if persisted?
         self.class.where(primary_key_condition).update_all(table_params)
