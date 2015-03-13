@@ -197,7 +197,7 @@ end
 survey = Survey.new(response: {nps: 10, what_can_we_improve: "Nothing :)"})
 survey.save!
 #    SQL: INSERT INTO surveys (response) VALUES (?)
-# Params: ["{\"nps\":10, \"what_can_we_improve\":\"Nothing :)\"}"]
+# Params: ['{"nps":10, "what_can_we_improve":"Nothing :)"}']
 Survey.first
 # => #<Survey: @id=1 @response={"nps"=>10, "what_can_we_improve"=>"Nothing :)"}>
 ```
