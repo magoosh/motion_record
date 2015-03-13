@@ -3,8 +3,10 @@ MotionRecord
 
 *Miniature ActiveRecord for RubyMotion*
 
-MotionRecord provides the core parts of ActiveRecord needed to start using
-SQLite as the datastore for your RubyMotion iOS or Android app.
+Everything you need needed to start using SQLite as the datastore for your
+RubyMotion iOS app.
+
+Android support should be coming soon :turtle:
 
 Installation
 ------------

@@ -6,12 +6,6 @@ module MotionRecord
       initialize_from_attribute_hash(attributes)
     end
 
-    def initialize_from_attribute_hash(hash)
-      self.class.attribute_defaults.merge(hash).each do |name, value|
-        self.instance_variable_set "@#{name}", value
-      end
-    end
-
     def to_attribute_hash
       self.class.attribute_names.each_with_object({}) do |name, hash|
         hash[name] = self.instance_variable_get "@#{name}"
@@ -20,6 +14,14 @@ module MotionRecord
 
     def connection
       self.class.connection
+    end
+
+    protected
+
+    def initialize_from_attribute_hash(hash)
+      self.class.attribute_defaults.merge(hash).each do |name, value|
+        self.instance_variable_set "@#{name}", value
+      end
     end
 
     class << self
