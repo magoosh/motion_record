@@ -8,6 +8,8 @@ app.
 
 :turtle: Android support should be coming soon
 
+[![Gem Version](https://badge.fury.io/rb/motion_record.svg)](http://badge.fury.io/rb/motion_record) [![Code Climate](https://codeclimate.com/github/magoosh/motion_record/badges/gpa.svg)](https://codeclimate.com/github/magoosh/motion_record) [![Test Coverage](https://codeclimate.com/github/magoosh/motion_record/badges/coverage.svg)](https://codeclimate.com/github/magoosh/motion_record)
+
 Installation
 ------------
 
