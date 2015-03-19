@@ -194,6 +194,22 @@ Survey.first
 # => #<Survey: @id=1 @response={"nps"=>10, "what_can_we_improve"=>"Nothing :)"}>
 ```
 
+RubyMotion doesn't have a Date class, but as long as you're okay with using Time
+objects with only the date attributes, you can serialize them to TEXT columns:
+
+```ruby
+class User < MotionRecord::Base
+  serialize :birthday, :date
+end
+
+drake = User.new(birthday: Time.new(1986, 10, 24))
+drake.save!
+#    SQL: INSERT INTO users (birthday) VALUES (?)
+# Params: ["1986-10-24"]
+User.first.birthday
+# => 1986-10-24 00:00:00 UTC
+```
+
 #### Custom Serializers
 
 To write a custom serializer, extend MotionRecord::Serialization::BaseSerializer
