@@ -89,6 +89,7 @@ def application(application, didFinishLaunchingWithOptions:launchOptions)
         t.integer :read_at
         t.integer :remote_id
         t.float   :satisfaction, default: 0.0
+        t.timestamps
       end
     end
 

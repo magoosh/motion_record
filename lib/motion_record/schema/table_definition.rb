@@ -36,6 +36,12 @@ module MotionRecord
         @index_definitions << IndexDefinition.new(@name, columns, options)
       end
 
+      # Add :created_at and :updated_at columns to the table
+      def timestamps
+        self.integer(:created_at)
+        self.integer(:updated_at)
+      end
+
       protected
 
       def add_default_primary_column
