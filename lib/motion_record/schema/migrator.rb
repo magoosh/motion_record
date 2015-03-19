@@ -15,7 +15,7 @@ module MotionRecord
         pending_migrations.each do |migration|
           migration.execute
           @migrated_versions << migration.version
-          Schema::Migration.create!(version: migration.version)
+          Schema::Migration.create(version: migration.version)
         end 
       end
 

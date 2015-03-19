@@ -57,20 +57,19 @@ end
 Attribute methods are inferred from the associated SQLite table definition.
 
 ```ruby
-message = Message.new(subject: "Welcome!", body: "If you have any questions...")
-# => #<Message: @id=nil @subject="Welcome!" @body="If you have any..." ...>
-message.satisfaction
-# => 0.0
+message = Message.new(subject: "Welcome!")
+# => #<Message: @id=nil @subject="Welcome!" @body=nil, @created_at=nil ...>
 ```
 
-Manage persistence with `save!`, `delete!`, and `persisted?`
+Manage persistence with `create`, `save`, `destroy`, and `persisted?`
 
 ```ruby
-message = Message.new(subject: "Welcome!", body: "If you have any questions...")
-message.save!
-message.id
-# => 1
-message.delete!
+message = Message.create(subject: "Welcome!")
+message.body = "If you have any questions, just ask us :)"
+message.save
+#    SQL: UPDATE messages SET subject = ?, body = ?, ... WHERE id = ?
+# Params: ["Welcome!", "If you have any questions, just ask :)", ..., 1]
+message.destroy
 message.persisted?
 # => false
 ```
@@ -177,7 +176,7 @@ class Message < MotionRecord::Base
   serialize :read_at, :time
 end
 
-Message.create!(subject: "Hello!", read_at: Time.now)
+Message.create(subject: "Hello!", read_at: Time.now)
 #    SQL: INSERT INTO messages (subject, body, read_at, ...) VALUES (?, ?, ?...)
 # Params: ["Hello!", nil, 1420099200, ...]
 Message.first.read_at
@@ -200,11 +199,10 @@ class Survey < MotionRecord::Base
   serialize :response, :json
 end
 
-survey = Survey.new(response: {nps: 10, what_can_we_improve: "Nothing :)"})
-survey.save!
+survey = Survey.create(response: {nps: 10, what_can_we_improve: "Nothing :)"})
 #    SQL: INSERT INTO surveys (response) VALUES (?)
 # Params: ['{"nps":10, "what_can_we_improve":"Nothing :)"}']
-Survey.first
+survey
 # => #<Survey: @id=1 @response={"nps"=>10, "what_can_we_improve"=>"Nothing :)"}>
 ```
 
@@ -216,12 +214,10 @@ class User < MotionRecord::Base
   serialize :birthday, :date
 end
 
-drake = User.new(birthday: Time.new(1986, 10, 24))
-drake.save!
+drake = User.create(birthday: Time.new(1986, 10, 24))
 #    SQL: INSERT INTO users (birthday) VALUES (?)
 # Params: ["1986-10-24"]
-User.first.birthday
-# => 1986-10-24 00:00:00 UTC
+# => #<User: @id=1, @birthday=1986-10-24 00:00:00 UTC>
 ```
 
 #### Custom Serializers
