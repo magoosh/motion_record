@@ -36,6 +36,8 @@ module MotionRecord
       #
       # Returns the String representation
       def self.date_to_iso8601(time)
+        return nil unless time
+        
         "%04d-%02d-%02d" % [time.year, time.month, time.day]
       end
 
@@ -45,6 +47,8 @@ module MotionRecord
       #
       # Returns a Time object
       def self.date_from_iso8601(date_str)
+        return nil unless date_str
+
         if (match = ISO8601_PATTERN.match(date_str))
           year = match[1].to_i
           mon  = match[2].to_i
