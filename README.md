@@ -68,6 +68,12 @@ message.persisted?
 # => false
 ```
 
+### Timestamp Columns
+
+If any of the columns are named `created_at` or `updated_at`, then they are
+automatically [serialized as Time objects](#motionrecordserialization) and set
+to `Time.now` when the record is created or updated.
+
 MotionRecord::Schema
 --------------------
 
@@ -83,6 +89,7 @@ def application(application, didFinishLaunchingWithOptions:launchOptions)
         t.integer :read_at
         t.integer :remote_id
         t.float   :satisfaction, default: 0.0
+        t.timestamps
       end
     end
 
