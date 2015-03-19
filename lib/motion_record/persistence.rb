@@ -1,6 +1,8 @@
 module MotionRecord
   module Persistence
 
+    TIMESTAMP_COLUMNS = [:created_at, :updated_at]
+
     def save!
       persist!
     end
@@ -31,6 +33,7 @@ module MotionRecord
       # HACK: Must ensure that attribute definitions are loaded from the table
       self.class.table_columns
 
+      self.apply_persistence_timestamps
       params = self.to_attribute_hash.reject { |k, _v| k == self.class.primary_key }
       table_params = self.class.serialize_table_params(params)
 
@@ -41,6 +44,12 @@ module MotionRecord
       end
 
       self.mark_persisted!
+    end
+
+    # Update persistence auto-timestamp attributes
+    def apply_persistence_timestamps
+      self.updated_at   = Time.now if self.class.attribute_names.include?(:updated_at)
+      self.created_at ||= Time.now if self.class.attribute_names.include?(:created_at)
     end
 
     def primary_key_condition
@@ -86,6 +95,10 @@ module MotionRecord
       def define_attribute_from_column(column)
         # TODO: handle options
         define_attribute column.name, default: column.default
+
+        if TIMESTAMP_COLUMNS.include?(column.name)
+          serialize column.name, :time
+        end
       end
     end
 

@@ -68,6 +68,12 @@ message.persisted?
 # => false
 ```
 
+### Timestamp Columns
+
+If any of the columns are named `created_at` or `updated_at`, then they are
+automatically [serialized as Time objects](#motionrecordserialization) and set
+to `Time.now` when the record is created or updated.
+
 MotionRecord::Schema
 --------------------
 
