@@ -1,4 +1,4 @@
-# This serializer stores Time objects to TEXT columbs, but discards all
+# This serializer stores Time objects to TEXT columns, but discards all
 # information except for year, month, and day.
 #
 # (Time is used because RubyMotion doesn't currently support Date objects)
