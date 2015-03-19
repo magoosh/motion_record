@@ -4,13 +4,15 @@ module MotionRecord
       # Register a new attribute serializer
       #
       # attribute               - Symbol name of the attribute
-      # serializer_class_or_sym - One of :time, :boolean, :json or a custom
+      # serializer_class_or_sym - One of :time, :boolean, :json, :date or a custom
       #                           subclass of Serialization::BaseSerializer
       def serialize(attribute, serializer_class_or_sym)
         if serializer_class_or_sym.is_a?(Symbol)
           self.serializer_classes[attribute] = case serializer_class_or_sym
           when :time
             Serialization::TimeSerializer
+          when :date
+            Serialization::DateSerializer
           when :boolean
             Serialization::BooleanSerializer
           when :json
