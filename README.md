@@ -6,6 +6,13 @@ MotionRecord
 Everything you need to start using SQLite as the datastore for your RubyMotion
 app.
 
+* [Installation](#installation)
+* [MotionRecord::Base](#motionrecordbase)
+* [MotionRecord::Schema](#motionrecordschema)
+* [MotionRecord::Scope](#motionrecordscope)
+* [MotionRecord::Serialization](#motionrecordserialization)
+* [MotionRecord::Association](#motionrecordassociation)
+
 :turtle: Android support should be [coming soon](https://github.com/magoosh/motion_record/issues/3)
 
 [![Gem Version](https://badge.fury.io/rb/motion_record.svg)](http://badge.fury.io/rb/motion_record) [![Code Climate](https://codeclimate.com/github/magoosh/motion_record/badges/gpa.svg)](https://codeclimate.com/github/magoosh/motion_record) [![Test Coverage](https://codeclimate.com/github/magoosh/motion_record/badges/coverage.svg)](https://codeclimate.com/github/magoosh/motion_record)
@@ -70,7 +77,7 @@ message.persisted?
 
 ### Timestamp Columns
 
-If any of the columns are named `created_at` or `updated_at`, then they are
+If any of the columns are named `created_at` or `updated_at` then they are
 automatically [serialized as Time objects](#motionrecordserialization) and set
 to `Time.now` when the record is created or updated.
 
