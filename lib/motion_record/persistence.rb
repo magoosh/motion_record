@@ -3,16 +3,12 @@ module MotionRecord
 
     TIMESTAMP_COLUMNS = [:created_at, :updated_at]
 
-    def save!
+    def save
       persist!
     end
 
-    def delete!
-      if persisted?
-        self.class.where(primary_key_condition).delete_all
-      else
-        raise "Can't delete unpersisted records"
-      end
+    def destroy
+      delete!
     end
 
     def persisted?
@@ -41,9 +37,22 @@ module MotionRecord
         self.class.where(primary_key_condition).update_all(table_params)
       else
         connection.insert self.class.table_name, table_params
+        if self.class.primary_key
+          # HACK: This assumes that primary keys are monotonically increasing
+          newest_primary_key = self.class.maximum(self.class.primary_key)
+          self.self.instance_variable_set "@#{self.class.primary_key}", newest_primary_key
+        end
       end
 
       self.mark_persisted!
+    end
+
+    def delete!
+      if persisted?
+        self.class.where(primary_key_condition).delete_all
+      else
+        raise "Can't delete unpersisted records"
+      end
     end
 
     # Update persistence auto-timestamp attributes
@@ -57,8 +66,15 @@ module MotionRecord
     end
 
     module ClassMethods
-      def create!(attributes={})
-        self.new(attributes).save!
+      # Create a new record
+      #
+      # attributes - a Hash of attribute values
+      #
+      # Returns the created record
+      def create(attributes={})
+        record = self.new(attributes)
+        record.save
+        record
       end
 
       # Sybmol name of the primary key column

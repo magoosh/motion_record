@@ -13,6 +13,10 @@ module MotionRecord
           connection.table_exists?(table_name)
         end
 
+        def primary_key
+          nil
+        end
+
         def create_table
           table = Schema::TableDefinition.new(table_name, id: false)
           table.integer :version, :null => false
